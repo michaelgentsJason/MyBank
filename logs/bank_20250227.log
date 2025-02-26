@@ -1,0 +1,17 @@
+2025-02-27 05:20:29,584 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:20:30,128 - bank - INFO - Assigned customer role to user: test_3
+2025-02-27 05:21:14,036 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:21:59,491 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:22:07,486 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:22:07,561 - bank - INFO - Verification code for user 5: 473498
+2025-02-27 05:24:48,953 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:26:26,269 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:26:55,401 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:27:23,303 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:28:07,037 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:28:07,377 - bank - ERROR - Transaction failed: module 'datetime' has no attribute 'utcnow'
+2025-02-27 05:35:15,025 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:35:37,365 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:35:37,561 - bank - INFO - Verification code for user 5: 632132
+2025-02-27 05:36:22,131 - bank - INFO - Retrieved active key: 1
+2025-02-27 05:36:57,809 - bank - INFO - Retrieved active key: 1

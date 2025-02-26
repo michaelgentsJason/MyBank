@@ -6,7 +6,7 @@ from security.encryption import EncryptionService
 from security.signature import SignatureService
 from utils.exceptions import ValidationError, InsufficientFundsError
 from utils.logger import bank_logger
-import datetime
+from datetime import datetime
 
 class TransactionService:
     def __init__(self,

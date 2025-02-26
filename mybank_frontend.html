@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBank安全系统</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .security-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .security-badge.secure {
+            background-color: #28a745;
+            color: white;
+        }
+        .security-badge.insecure {
+            background-color: #dc3545;
+            color: white;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .transaction-card {
+            border-left: 4px solid #007bff;
+        }
+        .account-card {
+            border-left: 4px solid #28a745;
+        }
+        .signature-container {
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        #securityInfo {
+            font-size: 14px;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid #007bff;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .form-container {
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 安全状态徽标 -->
+    <div id="securityBadge" class="security-badge secure">
+        <i class="bi bi-lock-fill"></i> 安全连接
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="text-center mb-4">
+                    <h1 class="display-5">MyBank安全系统</h1>
+                    <p class="lead">基于密码学的安全银行系统</p>
+                </div>
+
+                <!-- 登录状态显示 -->
+                <div id="loginStatus" class="alert alert-info text-center" role="alert">
+                    请登录以访问银行系统
+                </div>
+
+                <!-- 主内容区 -->
+                <div id="mainContent">
+                    <!-- 未登录时显示的屏幕 -->
+                    <div id="loginScreen" class="screen active">
+                        <div class="card">
+                            <div class="card-header">
+                                <ul class="nav nav-tabs card-header-tabs" id="authTabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="login-tab" data-bs-toggle="tab" href="#login">登录</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="register-tab" data-bs-toggle="tab" href="#register">注册</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <!-- 登录表单 -->
+                                    <div class="tab-pane fade show active" id="login">
+                                        <div class="form-container">
+                                            <form id="loginForm">
+                                                <div class="mb-3">
+                                                    <label for="loginUsername" class="form-label">用户名</label>
+                                                    <input type="text" class="form-control" id="loginUsername" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="loginPassword" class="form-label">密码</label>
+                                                    <input type="password" class="form-control" id="loginPassword" required>
+                                                </div>
+                                                <div class="d-grid">
+                                                    <button type="submit" class="btn btn-primary">登录</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <!-- 注册表单 -->
+                                    <div class="tab-pane fade" id="register">
+                                        <div class="form-container">
+                                            <form id="registerForm">
+                                                <div class="mb-3">
+                                                    <label for="registerUsername" class="form-label">用户名</label>
+                                                    <input type="text" class="form-control" id="registerUsername" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="registerEmail" class="form-label">电子邮箱</label>
+                                                    <input type="email" class="form-control" id="registerEmail" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="registerPassword" class="form-label">密码</label>
+                                                    <input type="password" class="form-control" id="registerPassword" required>
+                                                </div>
+                                                <div class="d-grid">
+                                                    <button type="submit" class="btn btn-success">注册</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MFA验证屏幕 -->
+                    <div id="mfaScreen" class="screen">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">双因素认证</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-container text-center">
+                                    <p>为确保账户安全，请输入验证码</p>
+                                    <form id="mfaForm">
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control form-control-lg text-center" id="mfaCode" placeholder="6位验证码" maxlength="6" required>
+                                        </div>
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-info">验证</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 主应用屏幕 -->
+                    <div id="appScreen" class="screen">
+                        <ul class="nav nav-tabs mb-4" id="appTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard">账户概览</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="transactions-tab" data-bs-toggle="tab" href="#transactions">交易</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="security-tab" data-bs-toggle="tab" href="#security">安全信息</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!-- 账户概览页面 -->
+                            <div class="tab-pane fade show active" id="dashboard">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="card-title mb-0">我的账户</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="accountsList" class="list-group">
+                                                    <!-- 账户会动态加载到这里 -->
+                                                    <div class="text-center py-4">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">加载中...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <button id="createAccountBtn" class="btn btn-outline-primary btn-sm">创建新账户</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-success text-white">
+                                                <h5 class="card-title mb-0">账户活动</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="recentActivity">
+                                                    <!-- 最近活动会动态加载到这里 -->
+                                                    <div class="text-center py-4">
+                                                        <div class="spinner-border text-success" role="status">
+                                                            <span class="visually-hidden">加载中...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 交易页面 -->
+                            <div class="tab-pane fade" id="transactions">
+                                <div class="row">
+                                    <div class="col-lg-5">
+                                        <div class="card">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="card-title mb-0">发起交易</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <form id="transactionForm">
+                                                    <div class="mb-3">
+                                                        <label for="fromAccount" class="form-label">从账户</label>
+                                                        <select class="form-select" id="fromAccount" required>
+                                                            <!-- 账户将动态加载 -->
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="toAccount" class="form-label">至账户</label>
+                                                        <select class="form-select" id="toAccount" required>
+                                                            <!-- 账户将动态加载 -->
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="amount" class="form-label">金额</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">¥</span>
+                                                            <input type="number" class="form-control" id="amount" min="0.01" step="0.01" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="description" class="form-label">描述</label>
+                                                        <textarea class="form-control" id="description" rows="2"></textarea>
+                                                    </div>
+                                                    <div class="d-grid">
+                                                        <button type="submit" class="btn btn-primary">确认交易</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="card">
+                                            <div class="card-header bg-info text-white">
+                                                <h5 class="card-title mb-0">交易历史</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="transactionHistory" style="max-height: 400px; overflow-y: auto;">
+                                                    <!-- 交易历史将动态加载 -->
+                                                    <div class="text-center py-4">
+                                                        <div class="spinner-border text-info" role="status">
+                                                            <span class="visually-hidden">加载中...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 安全信息页面 -->
+                            <div class="tab-pane fade" id="security">
+                                <div class="card">
+                                    <div class="card-header bg-dark text-white">
+                                        <h5 class="card-title mb-0">安全功能详情</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="securityInfo">
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="card h-100">
+                                                        <div class="card-header bg-success text-white">
+                                                            <h6 class="card-title mb-0">TLS/HTTPS安全通信</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <p>当前连接状态: <span id="tlsStatus" class="badge bg-success">安全</span></p>
+                                                            <p>证书信息:</p>
+                                                            <div class="signature-container">
+                                                                <div id="certInfo">
+                                                                    Subject: localhost<br>
+                                                                    Issuer: Self-Signed<br>
+                                                                    Valid From: <span id="certValidFrom"></span><br>
+                                                                    Valid To: <span id="certValidTo"></span><br>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card h-100">
+                                                        <div class="card-header bg-primary text-white">
+                                                            <h6 class="card-title mb-0">多因素认证 (MFA)</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <p>MFA状态: <span id="mfaStatus" class="badge bg-success">已启用</span></p>
+                                                            <button id="setupMfaBtn" class="btn btn-outline-primary btn-sm">重新设置MFA</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header bg-info text-white">
+                                                            <h6 class="card-title mb-0">数字签名验证</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <p>最近交易的数字签名:</p>
+                                                            <div class="signature-container mb-3" id="lastSignature">
+                                                                <!-- 签名将动态加载 -->
+                                                                暂无交易签名
+                                                            </div>
+                                                            <div class="alert alert-secondary" role="alert">
+                                                                <small>
+                                                                    <strong>安全说明:</strong> 数字签名确保交易数据的完整性和真实性。
+                                                                    每笔交易都使用HMAC-SHA256算法进行签名，防止数据被篡改。
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建账户模态框 -->
+    <div class="modal fade" id="createAccountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">创建新账户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createAccountForm">
+                        <div class="mb-3">
+                            <label for="accountType" class="form-label">账户类型</label>
+                            <select class="form-select" id="accountType" required>
+                                <option value="savings">储蓄账户</option>
+                                <option value="checking">支票账户</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmCreateAccount">创建</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交易详情模态框 -->
+    <div class="modal fade" id="transactionDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">交易详情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="transactionDetailContent">
+                    <!-- 交易详情将动态加载 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载指示器 -->
+    <div id="loadingIndicator" class="loading" style="display: none;">
+        <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+    </div>
+
+    <!-- Bootstrap & JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API基础URL
+        const API_BASE_URL = 'https://localhost:8443/api/v1';
+
+        // 状态管理
+        let currentUser = null;
+        let userToken = null;
+        let tempToken = null;
+        let userAccounts = [];
+        let lastTransactionSignature = null;
+
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化UI组件
+            initializeUI();
+
+            // 检查是否已经登录（如果本地存储有token）
+            checkLoginStatus();
+
+            // 设置证书日期
+            const now = new Date();
+            document.getElementById('certValidFrom').textContent = new Date(now.getTime() - 86400000).toLocaleDateString();
+            document.getElementById('certValidTo').textContent = new Date(now.getTime() + 365 * 86400000).toLocaleDateString();
+
+            // 检查连接安全性
+            checkConnectionSecurity();
+        });
+
+        // 初始化UI组件和事件监听
+        function initializeUI() {
+            // 登录表单提交
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+
+            // 注册表单提交
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                register();
+            });
+
+            // MFA表单提交
+            document.getElementById('mfaForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                verifyMFA();
+            });
+
+            // 创建账户按钮
+            document.getElementById('createAccountBtn').addEventListener('click', function() {
+                const createAccountModal = new bootstrap.Modal(document.getElementById('createAccountModal'));
+                createAccountModal.show();
+            });
+
+            // 确认创建账户
+            document.getElementById('confirmCreateAccount').addEventListener('click', function() {
+                createAccount();
+            });
+
+            // 交易表单提交
+            document.getElementById('transactionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                createTransaction();
+            });
+
+            // 设置MFA按钮
+            document.getElementById('setupMfaBtn').addEventListener('click', function() {
+                setupMFA();
+            });
+
+            // 标签页切换时更新数据
+            document.querySelectorAll('#appTabs .nav-link').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(e) {
+                    if (e.target.id === 'dashboard-tab') {
+                        loadAccounts();
+                        loadRecentActivity();
+                    } else if (e.target.id === 'transactions-tab') {
+                        loadTransactionHistory();
+                        updateAccountDropdowns();
+                    } else if (e.target.id === 'security-tab') {
+                        updateSecurityInfo();
+                    }
+                });
+            });
+        }
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const token = localStorage.getItem('userToken');
+            if (token) {
+                userToken = token;
+                currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                showLoggedInState();
+            }
+        }
+
+        // 检查连接安全性
+        function checkConnectionSecurity() {
+            const isSecure = window.location.protocol === 'https:';
+            const securityBadge = document.getElementById('securityBadge');
+            const tlsStatus = document.getElementById('tlsStatus');
+
+            if (isSecure) {
+                securityBadge.classList.add('secure');
+                securityBadge.classList.remove('insecure');
+                securityBadge.textContent = '安全连接';
+
+                if (tlsStatus) {
+                    tlsStatus.classList.add('bg-success');
+                    tlsStatus.classList.remove('bg-danger');
+                    tlsStatus.textContent = '安全';
+                }
+            } else {
+                securityBadge.classList.add('insecure');
+                securityBadge.classList.remove('secure');
+                securityBadge.textContent = '不安全连接';
+
+                if (tlsStatus) {
+                    tlsStatus.classList.add('bg-danger');
+                    tlsStatus.classList.remove('bg-success');
+                    tlsStatus.textContent = '不安全';
+                }
+            }
+        }
+
+        // 显示已登录状态
+        function showLoggedInState() {
+            // 更新登录状态显示
+            const loginStatus = document.getElementById('loginStatus');
+            loginStatus.classList.remove('alert-info');
+            loginStatus.classList.add('alert-success');
+            loginStatus.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>已登录: <strong>${currentUser.username}</strong></span>
+                    <button id="logoutBtn" class="btn btn-outline-dark btn-sm">登出</button>
+                </div>
+            `;
+
+            // 添加登出按钮事件
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // 切换到应用程序屏幕
+            showScreen('appScreen');
+
+            // 加载初始数据
+            loadAccounts();
+            loadRecentActivity();
+        }
+
+        // 切换显示屏幕
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // 显示/隐藏加载指示器
+        function toggleLoading(show) {
+            const loader = document.getElementById('loadingIndicator');
+            if (show) {
+                loader.style.display = 'flex';
+            } else {
+                loader.style.display = 'none';
+            }
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            // 简单实现，可以被更复杂的通知系统替代
+            alert(type.toUpperCase() + ': ' + message);
+        }
+
+        // API请求助手函数
+async function apiRequest(endpoint, method = 'GET', data = null) {
+    try {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (userToken) {
+            headers['Authorization'] = `Bearer ${userToken}`;
+        }
+
+        const options = {
+            method,
+            headers,
+            credentials: 'same-origin',
+            mode: 'cors',  // 添加CORS模式
+        };
+
+        if (data && (method === 'POST' || method === 'PUT')) {
+            options.body = JSON.stringify(data);
+        }
+
+        // 直接使用XMLHttpRequest绕过证书验证
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, `${API_BASE_URL}${endpoint}`, true);
+
+            // 设置请求头
+            Object.keys(headers).forEach(key => {
+                xhr.setRequestHeader(key, headers[key]);
+            });
+
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    } catch (e) {
+                        reject(new Error('解析响应失败'));
+                    }
+                } else {
+                    try {
+                        const errorData = JSON.parse(xhr.responseText);
+                        reject(new Error(errorData.detail || '请求失败'));
+                    } catch (e) {
+                        reject(new Error(`请求失败: ${xhr.status}`));
+                    }
+                }
+            };
+
+            xhr.onerror = function() {
+                reject(new Error('网络请求失败'));
+            };
+
+            if (options.body) {
+                xhr.send(options.body);
+            } else {
+                xhr.send();
+            }
+        });
+    } catch (error) {
+        console.error('API请求错误:', error);
+        throw error;
+    }
+}
+
+        // 登录
+        async function login() {
+            try {
+                toggleLoading(true);
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const response = await apiRequest('/auth/login', 'POST', {
+                    username,
+                    password
+                });
+
+                // 检查是否需要MFA验证
+                if (response.requires_mfa) {
+                    tempToken = response.temp_token;
+                    showScreen('mfaScreen');
+                } else {
+                    // 直接登录成功
+                    userToken = response.full_access_token;
+                    localStorage.setItem('userToken', userToken);
+
+                    // 获取用户信息
+                    const userInfo = await apiRequest(`/users/${response.user_id}`);
+                    currentUser = userInfo;
+                    localStorage.setItem('currentUser', JSON.stringify(userInfo));
+
+                    showLoggedInState();
+                }
+            } catch (error) {
+                showNotification(error.message, 'error');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // 注册
+        async function register() {
+            try {
+                toggleLoading(true);
+                const username = document.getElementById('registerUsername').value;
+                const password = document.getElementById('registerPassword').value;
+                const email = document.getElementById('registerEmail').value;
+
+                const response = await apiRequest('/users/create', 'POST', {
+                    username,
+                    password,
+                    email
+                });
+
+                showNotification('注册成功，请登录', 'success');
+
+                // 切换到登录标签
+                document.getElementById('login-tab').click();
+
+                // 预填充用户名
+                document.getElementById('loginUsername').value = username;
+            } catch (error) {
+                showNotification(error.message, 'error');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // 验证MFA
+        async function verifyMFA() {
+            try {
+                toggleLoading(true);
+                const mfaCode = document.getElementById('mfaCode').value;
+
+                const response = await apiRequest('/auth/verify-mfa', 'POST', {
+                    temp_token: tempToken,
+                    mfa_code: mfaCode
+                });
+
+                userToken = response.full_access_token;
+                localStorage.setItem('userToken', userToken);
+
+                // 获取用户信息
+                const userInfo = await apiRequest(`/users/${response.user_id}`);
+                currentUser = userInfo;
+                localStorage.setItem('currentUser', JSON.stringify(userInfo));
+
+                showLoggedInState();
+            } catch (error) {
+                showNotification(error.message, 'error');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // 登出
+        function logout() {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('currentUser');
+            userToken = null;
+            currentUser = null;
+
+            // 更新UI
+            const loginStatus = document.getElementById('loginStatus');
+            loginStatus.classList.remove('alert-success');
+            loginStatus.classList.add('alert-info');
+            loginStatus.textContent = '请登录以访问银行系统';
+
+            // 重置表单
+            document.getElementById('loginForm').reset();
+            document.getElementById('registerForm').reset();
+
+            // 切换到登录屏幕
+            showScreen('loginScreen');
+        }
+
+        // 设置MFA
+        async function setupMFA() {
+            try {
+                toggleLoading(true);
+
+                const response = await apiRequest(`/auth/setup-mfa?user_id=${currentUser.user_id}`, 'POST');
+
+                showNotification(`MFA设置成功！验证码：${response.mfa_code}，请在安全的地方保存此代码`, 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // 加载账户列表
+        async function loadAccounts() {
+            try {
+                if (!currentUser) return;
+
+                const accountsList = document.getElementById('accountsList');
+                accountsList.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">加载中...</span></div></div>';
+
+                const accounts = await apiRequest(`/accounts/user/${currentUser.user_id}`);
+                userAccounts = accounts;
+
+                if (accounts.length === 0) {
+                    accountsList.innerHTML = '<div class="alert alert-info">暂无账户，请创建账户</div>';
+                } else {
+                    let html = '';
+                    accounts.forEach(account => {
+                        html += `
+                            <div class="card account-card mb-2">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">${getAccountTypeName(account.account_type)} - ${account.account_number}</h6>
+                                            <div class="text-muted small">
+                                                <span class="badge ${account.status === 'active' ? 'bg-success' : 'bg-warning'}">${account.status}</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <h5 class="mb-0">¥ ${account.balance.toFixed(2)}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    accountsList.innerHTML = html;
+                }
+
+                // 更新交易页面的账户下拉框
+                updateAccountDropdowns();
+            } catch (error) {
+                console.error('加载账户失败:', error);
+                document.getElementById('accountsList').innerHTML = '<div class="alert alert-danger">加载账户失败</div>';
+            }
+        }
+
+        // 加载最近活动
+        async function loadRecentActivity() {
+            try {
+                if (!currentUser || userAccounts.length === 0) {
+                    document.getElementById('recentActivity').innerHTML = '<div class="alert alert-info">暂无活动记录</div>';
+                    return;
+                }
+
+                const recentActivity = document.getElementById('recentActivity');
+                recentActivity.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-success" role="status"><span class="visually-hidden">加载中...</span></div></div>';
+
+                // 获取第一个账户的交易
+                const accountId = userAccounts[0].account_id;
+                const transactions = await apiRequest(`/transactions/account/${accountId}`);
+
+                if (transactions.length === 0) {
+                    recentActivity.innerHTML = '<div class="alert alert-info">暂无交易记录</div>';
+                } else {
+                    let html = '';
+                    transactions.slice(0, 5).forEach(tx => {
+                        const isOutgoing = tx.from_account_id === accountId;
+                        const amount = isOutgoing ? -tx.amount : tx.amount;
+                        html += `
+                            <div class="card transaction-card mb-2">
+                                <div class="card-body py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">${new Date(tx.created_at).toLocaleString()}</small>
+                                            <div>${tx.description || '交易'}</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge ${amount < 0 ? 'bg-danger' : 'bg-success'}">${amount < 0 ? '支出' : '收入'}</span>
+                                            <div class="${amount < 0 ? 'text-danger' : 'text-success'} fw-bold">
+                                                ${amount < 0 ? '-' : '+'}¥ ${Math.abs(amount).toFixed(2)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    recentActivity.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('加载活动记录失败:', error);
+                document.getElementById('recentActivity').innerHTML = '<div class="alert alert-danger">加载活动记录失败</div>';
+            }
+        }
+
+        // 更新账户下拉框
+        function updateAccountDropdowns() {
+            const fromSelect = document.getElementById('fromAccount');
+            const toSelect = document.getElementById('toAccount');
+
+            if (!fromSelect || !toSelect) return;
+
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+
+            userAccounts.forEach(account => {
+                const fromOption = document.createElement('option');
+                fromOption.value = account.account_id;
+                fromOption.textContent = `${getAccountTypeName(account.account_type)} - ${account.account_number} (¥${account.balance.toFixed(2)})`;
+                fromSelect.appendChild(fromOption);
+
+                const toOption = document.createElement('option');
+                toOption.value = account.account_id;
+                toOption.textContent = `${getAccountTypeName(account.account_type)} - ${account.account_number}`;
+                toSelect.appendChild(toOption);
+            });
+        }
+
+        // 创建账户
+        async function createAccount() {
+            try {
+                toggleLoading(true);
+                const accountType = document.getElementById('accountType').value;
+
+                const response = await apiRequest('/accounts/create', 'POST', {
+                    user_id: currentUser.user_id,
+                    account_type: accountType
+                });
+
+                showNotification('账户创建成功', 'success');
+
+                // 关闭模态框
+                const modalElement = document.getElementById('createAccountModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+
+                // 重新加载账户
+                loadAccounts();
+            } catch (error) {
+                showNotification(error.message, 'error');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // 创建交易
+        async function createTransaction() {
+            try {
+                toggleLoading(true);
+                const fromAccountId = parseInt(document.getElementById('fromAccount').value);
+                const toAccountId = parseInt(document.getElementById('toAccount').value);
+                const amount = parseFloat(document.getElementById('amount').value);
+                const description = document.getElementById('description').value;
+
+                if (fromAccountId === toAccountId) {
+                    throw new Error('发送和接收账户不能相同');
+                }
+
+                const response = await apiRequest('/transactions/create', 'POST', {
+                    from_account_id: fromAccountId,
+                    to_account_id: toAccountId,
+                    amount,
+                    description
+                });
+
+                showNotification('交易创建成功', 'success');
+
+                // 保存最近的交易签名
+                if (response.signature) {
+                    lastTransactionSignature = response.signature;
+                    document.getElementById('lastSignature').textContent = lastTransactionSignature;
+                }
+
+                // 重置表单
+                document.getElementById('transactionForm').reset();
+
+                // 重新加载数据
+                loadAccounts();
+                loadTransactionHistory();
+            } catch (error) {
+                showNotification(error.message, 'error');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // 加载交易历史
+        async function loadTransactionHistory() {
+            try {
+                if (!currentUser || userAccounts.length === 0) {
+                    document.getElementById('transactionHistory').innerHTML = '<div class="alert alert-info">暂无交易记录</div>';
+                    return;
+                }
+
+                const accountId = userAccounts[0].account_id;
+                const transactionHistory = document.getElementById('transactionHistory');
+                transactionHistory.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-info" role="status"><span class="visually-hidden">加载中...</span></div></div>';
+
+                const transactions = await apiRequest(`/transactions/account/${accountId}`);
+
+                if (transactions.length === 0) {
+                    transactionHistory.innerHTML = '<div class="alert alert-info">暂无交易记录</div>';
+                } else {
+                    // 如果有交易，保存最新交易的签名
+                    if (transactions[0].signature) {
+                        lastTransactionSignature = transactions[0].signature;
+                        document.getElementById('lastSignature').textContent = lastTransactionSignature;
+                    }
+
+                    let html = '';
+                    transactions.forEach(tx => {
+                        const isOutgoing = tx.from_account_id === accountId;
+                        const amount = isOutgoing ? -tx.amount : tx.amount;
+                        html += `
+                            <div class="card transaction-card mb-2"
+                                 data-tx-id="${tx.transaction_id}"
+                                 style="cursor: pointer;"
+                                 onclick="showTransactionDetail(${JSON.stringify(tx).replace(/"/g, '&quot;')})">
+                                <div class="card-body py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">${new Date(tx.created_at).toLocaleString()}</small>
+                                            <div>${tx.description || '交易'}</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge ${amount < 0 ? 'bg-danger' : 'bg-success'}">${amount < 0 ? '支出' : '收入'}</span>
+                                            <div class="${amount < 0 ? 'text-danger' : 'text-success'} fw-bold">
+                                                ${amount < 0 ? '-' : '+'}¥ ${Math.abs(amount).toFixed(2)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    transactionHistory.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('加载交易历史失败:', error);
+                document.getElementById('transactionHistory').innerHTML = '<div class="alert alert-danger">加载交易历史失败</div>';
+            }
+        }
+
+        // 显示交易详情
+        function showTransactionDetail(transaction) {
+            const modal = new bootstrap.Modal(document.getElementById('transactionDetailModal'));
+            const content = document.getElementById('transactionDetailContent');
+
+            content.innerHTML = `
+                <div class="mb-3">
+                    <strong>交易ID:</strong> ${transaction.transaction_id}
+                </div>
+                <div class="mb-3">
+                    <strong>从账户:</strong> ${transaction.from_account_id}
+                </div>
+                <div class="mb-3">
+                    <strong>至账户:</strong> ${transaction.to_account_id}
+                </div>
+                <div class="mb-3">
+                    <strong>金额:</strong> ¥${transaction.amount.toFixed(2)}
+                </div>
+                <div class="mb-3">
+                    <strong>类型:</strong> ${transaction.type || '转账'}
+                </div>
+                <div class="mb-3">
+                    <strong>状态:</strong> ${transaction.status}
+                </div>
+                <div class="mb-3">
+                    <strong>时间:</strong> ${new Date(transaction.created_at).toLocaleString()}
+                </div>
+                <div class="mb-3">
+                    <strong>描述:</strong> ${transaction.description || '无描述'}
+                </div>
+                ${transaction.signature ? `
+                <div class="mb-3">
+                    <strong>数字签名:</strong>
+                    <div class="signature-container mt-2">
+                        ${transaction.signature}
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            modal.show();
+        }
+
+        // 更新安全信息
+        function updateSecurityInfo() {
+            // 检查连接安全性
+            checkConnectionSecurity();
+
+            // 更新最后交易签名
+            if (lastTransactionSignature) {
+                document.getElementById('lastSignature').textContent = lastTransactionSignature;
+            }
+        }
+
+        // 辅助函数：获取账户类型名称
+        function getAccountTypeName(type) {
+            const types = {
+                'savings': '储蓄账户',
+                'checking': '支票账户',
+                'investment': '投资账户',
+                'loan': '贷款账户'
+            };
+            return types[type] || type;
+        }
+    </script>
+</body>
+</html>
