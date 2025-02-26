@@ -1,0 +1,3 @@
+2025-02-22 00:15:07,609 - bank - INFO - Retrieved active key: 1
+2025-02-22 01:36:30,438 - bank - ERROR - Error getting role by name: When initializing mapper Mapper[User(users)], expression 'Account' failed to locate a name ('Account'). If this is a class name, consider adding this relationship() to the <class 'dal.models.user.User'> class after both dependent classes have been defined.
+2025-02-22 01:36:30,439 - bank - ERROR - Error creating default roles: When initializing mapper Mapper[User(users)], expression 'Account' failed to locate a name ('Account'). If this is a class name, consider adding this relationship() to the <class 'dal.models.user.User'> class after both dependent classes have been defined.

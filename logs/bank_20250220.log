@@ -1,0 +1,44 @@
+2025-02-20 06:14:09,211 - bank - INFO - No active key found
+2025-02-20 22:50:51,629 - bank - INFO - Retrieved active key: 1
+2025-02-20 22:51:15,621 - bank - INFO - Retrieved active key: 1
+2025-02-20 22:51:15,927 - bank - ERROR - Decryption failed: 
+2025-02-20 22:51:15,927 - bank - ERROR - Failed to get user info: Failed to decrypt data
+2025-02-20 22:53:34,288 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:00:51,138 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:00:51,288 - bank - ERROR - Login failed: Invalid username or password
+2025-02-20 23:01:19,391 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:01:19,888 - bank - ERROR - Login failed: (pymysql.err.ProgrammingError) (1146, "Table 'ac_db.mfa_configs' doesn't exist")
+[SQL: SELECT mfa_configs.config_id AS mfa_configs_config_id, mfa_configs.user_id AS mfa_configs_user_id, mfa_configs.verification_code AS mfa_configs_verification_code, mfa_configs.code_expires_at AS mfa_configs_code_expires_at, mfa_configs.is_enabled AS mfa_configs_is_enabled, mfa_configs.created_at AS mfa_configs_created_at, mfa_configs.updated_at AS mfa_configs_updated_at 
+FROM mfa_configs 
+WHERE mfa_configs.user_id = %(user_id_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'user_id_1': 4, 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-02-20 23:07:39,787 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:07:40,124 - bank - ERROR - Login failed: (pymysql.err.ProgrammingError) (1146, "Table 'ac_db.mfa_configs' doesn't exist")
+[SQL: SELECT mfa_configs.config_id AS mfa_configs_config_id, mfa_configs.user_id AS mfa_configs_user_id, mfa_configs.verification_code AS mfa_configs_verification_code, mfa_configs.code_expires_at AS mfa_configs_code_expires_at, mfa_configs.is_enabled AS mfa_configs_is_enabled, mfa_configs.created_at AS mfa_configs_created_at, mfa_configs.updated_at AS mfa_configs_updated_at 
+FROM mfa_configs 
+WHERE mfa_configs.user_id = %(user_id_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'user_id_1': 4, 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-02-20 23:17:23,871 - bank - INFO - No active key found
+2025-02-20 23:17:23,930 - bank - ERROR - Login failed: Invalid username or password
+2025-02-20 23:33:44,722 - bank - INFO - No active key found
+2025-02-20 23:34:58,650 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:34:59,253 - bank - ERROR - Session creation failed: 'SecurityUtils' object has no attribute 'generate_token'
+2025-02-20 23:34:59,253 - bank - ERROR - Login failed: 'SecurityUtils' object has no attribute 'generate_token'
+2025-02-20 23:39:17,119 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:45:08,904 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:46:03,133 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:46:03,464 - bank - INFO - Verification code for user 2: 334040
+2025-02-20 23:48:47,262 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:48:47,711 - bank - INFO - Verification code for user 2: 449487
+2025-02-20 23:49:00,210 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:49:00,555 - bank - INFO - Verification code for user 2: 783897
+2025-02-20 23:49:04,071 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:49:04,534 - bank - INFO - Verification code for user 2: 328745
+2025-02-20 23:50:06,325 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:50:06,720 - bank - INFO - Verification code for user 2: 484643
+2025-02-20 23:51:12,895 - bank - INFO - Retrieved active key: 1
+2025-02-20 23:51:13,193 - bank - ERROR - MFA verification failed: Invalid MFA code

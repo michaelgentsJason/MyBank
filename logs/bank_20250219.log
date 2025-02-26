@@ -1,0 +1,21 @@
+2025-02-19 00:25:06,529 - bank - ERROR - Key initialization failed: Mapper 'Mapper[User(users)]' has no property 'accounts'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-02-19 00:25:06,547 - bank - ERROR - Key initialization failed: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Account(accounts)]'. Original exception was: Mapper 'Mapper[User(users)]' has no property 'accounts'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-02-19 00:25:06,550 - bank - ERROR - Key initialization failed: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Account(accounts)]'. Original exception was: Mapper 'Mapper[User(users)]' has no property 'accounts'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-02-19 00:30:49,379 - bank - ERROR - Failed to initialize Fernet: 'KeyManager' object has no attribute 'get_current_key'
+2025-02-19 00:35:26,517 - bank - ERROR - Key initialization failed: 'EncryptionKey' object has no attribute 'key'
+2025-02-19 00:36:20,552 - bank - ERROR - Failed to create user: (pymysql.err.DataError) (1406, "Data too long for column 'email' at row 1")
+[SQL: INSERT INTO users (username, password_hash, email, status, created_at, updated_at) VALUES (%(username)s, %(password_hash)s, %(email)s, %(status)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'username': 'test_user3', 'password_hash': '$2b$12$zOjvlOPy8aRBA9zFXBvkYuQIsJQb1tvluD7P9HZU9dSqgT1CPIgb.', 'email': 'gAAAAABntLcEErLzFrVfYGkNLJu7pB6bqNd48n6KIwuHtaDrQjiaU6nC8YOY8FsVhL-QN6mDMSq825YCW63yKeednPITSMWru0ofOF7upqwAkfzs37zzMfg=', 'status': 'active', 'created_at': datetime.datetime(2025, 2, 18, 16, 36, 20, 549820), 'updated_at': datetime.datetime(2025, 2, 18, 16, 36, 20, 549820)}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2025-02-19 00:41:34,278 - bank - ERROR - Key initialization failed: 'EncryptionKey' object has no attribute 'key'
+2025-02-19 00:41:34,295 - bank - ERROR - Key initialization failed: 'EncryptionKey' object has no attribute 'key'
+2025-02-19 00:41:34,311 - bank - ERROR - Key initialization failed: 'EncryptionKey' object has no attribute 'key'
+2025-02-19 00:42:00,197 - bank - ERROR - Key initialization failed: 'EncryptionKey' object has no attribute 'key'
+2025-02-19 02:18:24,042 - bank - ERROR - Key initialization failed: 'EncryptionKeyRepository' object has no attribute 'get_current_key'
+2025-02-19 02:26:34,403 - bank - INFO - No active key found
+2025-02-19 02:31:27,826 - bank - INFO - No active key found
+2025-02-19 02:31:28,407 - bank - INFO - Retrieved active key: 1
+2025-02-19 02:47:27,890 - bank - INFO - No active key found
+2025-02-19 02:47:28,545 - bank - ERROR - Transaction failed: Insufficient funds
+2025-02-19 02:49:12,862 - bank - INFO - No active key found
+2025-02-19 02:49:13,558 - bank - ERROR - Transaction failed: Insufficient funds

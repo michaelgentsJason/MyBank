@@ -1,0 +1,40 @@
+2025-02-21 03:34:29,002 - bank - INFO - Retrieved active key: 1
+2025-02-21 03:34:29,104 - bank - INFO - Verification code for user 2: 237563
+2025-02-21 03:35:44,607 - bank - INFO - Retrieved active key: 1
+2025-02-21 03:35:44,980 - bank - INFO - Verification code for user 2: 193825
+2025-02-21 05:55:49,522 - bank - INFO - Retrieved active key: 1
+2025-02-21 05:55:49,671 - bank - INFO - Verification code for user 2: 964100
+2025-02-21 05:56:34,469 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:17:18,962 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:18:21,804 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:18:22,058 - bank - INFO - Verification code for user 3: 803762
+2025-02-21 06:19:17,890 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:19:57,241 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:21:03,939 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:25:47,453 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:26:55,317 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:36:46,941 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:37:45,368 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:38:10,260 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:39:03,091 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:45:29,387 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:53:48,737 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:54:10,704 - bank - INFO - Retrieved active key: 1
+2025-02-21 06:54:26,089 - bank - INFO - Retrieved active key: 1
+2025-02-21 19:24:07,630 - bank - INFO - Retrieved active key: 1
+2025-02-21 19:25:54,293 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:30:03,539 - bank - INFO - No active key found
+2025-02-21 23:30:34,592 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:30:50,994 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:30:51,127 - bank - INFO - Verification code for user 1: 430817
+2025-02-21 23:31:40,786 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:32:24,378 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:33:10,591 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:33:19,763 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:34:37,184 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:34:37,358 - bank - ERROR - Transaction failed: Insufficient funds
+2025-02-21 23:34:54,905 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:35:08,261 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:35:08,361 - bank - ERROR - Transaction failed: Insufficient funds
+2025-02-21 23:52:21,032 - bank - INFO - Retrieved active key: 1
+2025-02-21 23:57:49,301 - bank - INFO - Retrieved active key: 1

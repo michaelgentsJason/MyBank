@@ -1,0 +1,56 @@
+2025-02-24 01:00:00,308 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:00:00,603 - bank - ERROR - Login failed: Invalid username or password
+2025-02-24 01:00:13,239 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:00:58,299 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:02:02,808 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:02:02,938 - bank - INFO - Verification code for user 5: 563544
+2025-02-24 01:02:39,782 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:02:59,050 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:03:40,234 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:03:48,913 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:03:49,224 - bank - ERROR - Failed to list users: get_all() got an unexpected keyword argument 'skip'
+2025-02-24 01:04:52,375 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:04:52,592 - bank - ERROR - Failed to list users: get_all() got an unexpected keyword argument 'skip'
+2025-02-24 01:05:10,888 - bank - INFO - Retrieved active key: 1
+2025-02-24 01:05:10,997 - bank - ERROR - Decryption failed: 
+2025-02-24 01:05:10,998 - bank - ERROR - Failed to get user info: Failed to decrypt data
+2025-02-24 01:05:59,052 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:26:51,843 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:28:35,966 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:29:38,133 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:30:18,045 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:31:21,428 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:31:28,396 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:35:06,175 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:35:25,629 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:35:25,855 - bank - INFO - Verification code for user 6: 907045
+2025-02-24 02:36:10,243 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:36:26,949 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:36:51,763 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:37:49,914 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:38:29,186 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:38:29,408 - bank - ERROR - Failed to create account: (pymysql.err.DataError) (1265, "Data truncated for column 'account_type' at row 1")
+[SQL: INSERT INTO accounts (user_id, account_type, account_number, balance, status, created_at, updated_at) VALUES (%(user_id)s, %(account_type)s, %(account_number)s, %(balance)s, %(status)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'user_id': 6, 'account_type': 'saving', 'account_number': 'ACC96504', 'balance': 0.0, 'status': 'active', 'created_at': datetime.datetime(2025, 2, 23, 18, 38, 29, 406894), 'updated_at': datetime.datetime(2025, 2, 23, 18, 38, 29, 406894)}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2025-02-24 02:38:52,026 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:38:52,139 - bank - ERROR - Failed to create account: (pymysql.err.DataError) (1265, "Data truncated for column 'account_type' at row 1")
+[SQL: INSERT INTO accounts (user_id, account_type, account_number, balance, status, created_at, updated_at) VALUES (%(user_id)s, %(account_type)s, %(account_number)s, %(balance)s, %(status)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'user_id': 6, 'account_type': 'saving', 'account_number': 'ACC55727', 'balance': 0.0, 'status': 'active', 'created_at': datetime.datetime(2025, 2, 23, 18, 38, 52, 139601), 'updated_at': datetime.datetime(2025, 2, 23, 18, 38, 52, 139601)}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2025-02-24 02:40:17,556 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:41:13,349 - bank - INFO - Retrieved active key: 1
+2025-02-24 02:42:12,650 - bank - INFO - Retrieved active key: 1
+2025-02-24 06:18:10,855 - bank - INFO - No active key found
+2025-02-24 06:18:11,395 - bank - ERROR - Failed to create user: Textual SQL expression '\n                    INSE...' should be explicitly declared as text('\n                    INSE...')
+2025-02-24 06:28:04,386 - bank - INFO - Retrieved active key: 1
+2025-02-24 06:28:04,867 - bank - INFO - Assigned customer role to user: test
+2025-02-24 06:28:46,934 - bank - INFO - Retrieved active key: 1
+2025-02-24 06:28:47,375 - bank - ERROR - Login failed: generate_token() got an unexpected keyword argument 'token_type'
+2025-02-24 06:56:53,291 - bank - INFO - Retrieved active key: 1
+2025-02-24 06:57:47,973 - bank - INFO - Retrieved active key: 1
+2025-02-24 06:59:44,214 - bank - INFO - Retrieved active key: 1
+2025-02-24 06:59:44,404 - bank - INFO - Verification code for user 4: 263301
+2025-02-24 07:00:29,611 - bank - INFO - Retrieved active key: 1
+2025-02-24 07:00:51,170 - bank - INFO - Retrieved active key: 1
+2025-02-24 07:01:20,432 - bank - INFO - Retrieved active key: 1
