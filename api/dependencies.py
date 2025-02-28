@@ -5,6 +5,7 @@ from services.user_service import UserService
 from services.auth_service import AuthService
 from services.account_service import AccountService
 from services.transaction_service import TransactionService
+from services.message_service import MessageService
 from security.security_utils import SecurityUtils
 from security.encryption import EncryptionService
 from security.key_manager import KeyManager
@@ -15,6 +16,7 @@ from dal.repositories.transaction_repository import TransactionRepository
 from dal.repositories.encryption_keys import EncryptionKeyRepository
 from dal.repositories.session_repository import SessionRepository
 from dal.repositories.mfa_repository import MFARepository
+from dal.repositories.message_repository import MessageRepository
 
 
 def get_user_service(db: Session = Depends(get_db)):
@@ -76,6 +78,23 @@ def get_transaction_service(db: Session = Depends(get_db)):
         account_repository=account_repository,
         encryption_service=encryption_service
         # 如果需要签名服务，添加: signature_service=signature_service
+    )
+
+
+def get_message_service(db: Session = Depends(get_db)):
+    """获取消息服务"""
+    message_repository = MessageRepository(db)
+    user_repository = UserRepository(db)
+    key_repository = EncryptionKeyRepository(db)
+    key_manager = KeyManager(key_repository)
+    encryption_service = EncryptionService(key_manager)
+    signature_service = SignatureService("your-secret-key-for-signatures")
+
+    return MessageService(
+        message_repository=message_repository,
+        user_repository=user_repository,
+        encryption_service=encryption_service,
+        signature_service=signature_service
     )
 
 def get_signature_service():

@@ -7,6 +7,8 @@ from security.signature import SignatureService
 from utils.exceptions import ValidationError, InsufficientFundsError
 from utils.logger import bank_logger
 from datetime import datetime
+from security.blockchain import blockchain_instance
+
 
 class TransactionService:
     def __init__(self,
@@ -95,6 +97,20 @@ class TransactionService:
                 transaction.transaction_id,
                 {"status": "completed"}
             )
+
+            # 简化交易数据，仅包含关键信息
+            blockchain_transaction = {
+                "transaction_id": transaction.transaction_id,
+                "from_account_id": transaction.from_account_id,
+                "to_account_id": transaction.to_account_id,
+                "amount": float(transaction.amount),
+                "type": transaction.transaction_type,
+                "signature": signature
+            }
+
+            # 添加到区块链并挖掘
+            blockchain_instance.add_transaction(blockchain_transaction)
+            blockchain_instance.mine_pending_transactions()
 
             return {
                 "transaction_id": transaction.transaction_id,

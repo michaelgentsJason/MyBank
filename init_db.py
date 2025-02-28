@@ -11,6 +11,7 @@ from dal.models.user_role import UserRole
 from dal.models.audit_log import AuditLog
 from dal.models.session import Session
 from dal.models.mfa_config import MFAConfig
+from dal.models.message import SecureMessage
 
 def init_db():
     # 删除所有现有表
