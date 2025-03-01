@@ -52,7 +52,7 @@ The system follows a layered architecture pattern:
 └─────┬───────┘
       │
 ┌─────▼───────┐      ┌─────────────────┐
-│ Repositories│◄────►│ Security Modules │
+│ Repositories│◄────►│ Security Modules│
 └─────┬───────┘      └─────────────────┘
       │
 ┌─────▼───────┐
